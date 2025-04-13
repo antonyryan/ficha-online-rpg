@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Painel do Mestre</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="./script.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <h2 id="dashboardTitle">Painel do Mestre</h2>
+      <div class="setup-section">
+        <button onclick="createRoom()" class="btn btn-primary">
+          Criar Sala
+        </button>
+      </div>
+      <div id="masterControls" style="display: none">
+        <h3>Lista de Jogadores</h3>
+        <ul id="playerList" class="list-group"></ul>
+      </div>
+      <div id="notifications"></div>
+    </div>
+  </body>
+</html>

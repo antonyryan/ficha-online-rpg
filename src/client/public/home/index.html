@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <title>Ficha Tática RPG</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="styles.css" rel="stylesheet" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+      rel="stylesheet"
+    />
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/home/script.js"></script>
+  </head>
+
+  <body class="bg-light">
+    <div
+      id="notifications"
+      style="position: fixed; bottom: 20px; right: 20px"
+    ></div>
+    <div class="container mt-4">
+      <!-- Seção de Configuração Inicial -->
+
+      <div id="setup" class="setup-section">
+        <h3 class="text-center mb-4">Configurar Personagem</h3>
+        <div class="row">
+          <div class="col-12 col-md-6 mb-3">
+            <label>Selecionar Perfil Pré-Definido:</label>
+            <select
+              id="profileSelect"
+              class="form-control"
+              onchange="loadProfile()"
+            >
+              <option value="" disabled hidden>-- Carregando perfis --</option>
+            </select>
+          </div>
+          <div class="col-12 col-md-6 mb-3">
+            <label>Nome do Personagem:</label>
+            <input
+              type="text"
+              id="characterName"
+              class="form-control"
+              placeholder="Digite o nome do personagem"
+            />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12 col-md-6 mb-3">
+            <label>HP Máximo:</label>
+            <input
+              type="number"
+              id="initialHp"
+              class="form-control"
+              value="0"
+            />
+          </div>
+          <div class="col-12 col-md-6 mb-3">
+            <label>SP Máximo:</label>
+            <input
+              type="number"
+              id="initialSp"
+              class="form-control"
+              value="0"
+            />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12 col-md-6 mb-3">
+            <label>CA (Chance de Acerto):</label>
+            <input
+              type="number"
+              id="initialCa"
+              class="form-control"
+              value="0"
+            />
+          </div>
+          <div class="col-12 col-md-6 mb-3">
+            <label>Movimento (blocos):</label>
+            <input
+              type="number"
+              id="initialMovimento"
+              class="form-control"
+              value="0"
+            />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12 col-md-6 mb-3">
+            <label>Ataque (ex: 1d8):</label>
+            <input
+              type="text"
+              id="initialAtaque"
+              class="form-control"
+              value="0"
+            />
+          </div>
+          <div class="col-12 col-md-6 mb-3">
+            <label>Alcance (blocos):</label>
+            <input
+              type="number"
+              id="initialAlcance"
+              class="form-control"
+              value="0"
+            />
+          </div>
+          <div class="col-12 col-md-6 mb-3">
+            <label>Skills:</label>
+            <div id="skill-container">
+
+            </div>
+          </div>
+        </div>
+        <!-- <button class="btn btn-primary w-100" onclick="initCharacter()">
+          Criar Ficha
+        </button> -->
+        <div class="mb-3">
+          <label for="roomCode" class="form-label">Código da Sala:</label>
+          <input
+            type="text"
+            id="roomCode"
+            class="form-control"
+            placeholder="Digite o código da sala"
+          />
+        </div>
+        <button onclick="initCharacter()" class="btn btn-primary w-100">
+          Entrar na Sala
+        </button>
+      </div>
+
+      <!-- Ficha do Personagem (inicialmente oculta) -->
+      <div id="characterSheet" style="display: none">
+        <h2 class="text-center mb-4" id="characterTitle">
+          Ficha do Personagem
+        </h2>
+
+        <!-- Container de Colunas -->
+        <div class="columns-container row">
+          <!-- Coluna Esquerda: Atributos -->
+          <div class="column col-12 col-md-6">
+            <div class="stat-box">
+              <h3><i class="fas fa-heartbeat icon"></i> Recursos</h3>
+              <div class="resource-box">
+                <!-- HP -->
+                <div class="resource-item">
+                  <i class="fas fa-heart icon"></i>
+                  <span
+                    >HP: <span id="hp">0</span>/<span id="hpMax">0</span></span
+                  >
+                  <button
+                    class="btn btn-success btn-sm btn-custom"
+                    onclick="updateStatus('increaseHp')"
+                  >
+                    +1
+                  </button>
+                  <button
+                    class="btn btn-danger btn-sm btn-custom"
+                    onclick="updateStatus('reduceHp')"
+                  >
+                    -1
+                  </button>
+                </div>
+
+                <!-- SP -->
+                <div class="resource-item">
+                  <i class="fas fa-bolt icon"></i>
+                  <span
+                    >SP: <span id="sp">0</span>/<span id="spMax">0</span></span
+                  >
+                  <button
+                    class="btn btn-success btn-sm btn-custom"
+                    onclick="updateStatus('increaseSp')"
+                  >
+                    +1
+                  </button>
+                  <button
+                    class="btn btn-danger btn-sm btn-custom"
+                    onclick="updateStatus('reduceSp')"
+                  >
+                    -1
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="stat-box">
+              <h3><i class="fas fa-dice-d20 icon"></i> Atributos</h3>
+              <div class="attributes-grid">
+                <div class="attribute-box">
+                  <i class="fas fa-shield-alt icon"></i>
+                  <div class="attribute-value" id="ca">0</div>
+                </div>
+                <div class="attribute-box">
+                  <i class="fas fa-shoe-prints icon"></i>
+                  <div class="attribute-value" id="movimento">0</div>
+                </div>
+                <div class="attribute-box">
+                  <i class="fas fa-hand-fist icon"></i>
+                  <div class="attribute-value" id="ataque">0</div>
+                </div>
+                <div class="attribute-box">
+                  <i class="fas fa-bullseye icon"></i>
+                  <div class="attribute-value" id="alcance">0</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Coluna Direita: Habilidades e Condições -->
+          <div class="column col-12 col-md-6">
+            <div class="stat-box">
+              <h3><i class="fas fa-spell-check icon"></i> Habilidades</h3>
+              <div class="skill-card">
+                <div class="skill-item">
+                  <strong>Skill 1</strong>
+                  <span class="skill-cooldown"
+                    >[<span id="cooldown1">0</span>]</span
+                  >
+                  <select
+                    class="form-select form-select-sm"
+                    id="cooldownDropdown1"
+                    onchange="setCooldown(1)"
+                  >
+                    <option value="0">Sem Cooldown</option>
+                    <option value="1">1 Turno</option>
+                    <option value="2">2 Turnos</option>
+                    <option value="3">3 Turnos</option>
+                    <option value="4">4 Turnos</option>
+                    <option value="5">5 Turnos</option>
+                    <option value="6">6 Turnos</option>
+                  </select>
+                  <button
+                    class="btn btn-primary skill-button"
+                    onclick="useSkill(1)"
+                    data-bs-toggle="tooltip"
+                    title="Usar Habilidade"
+                  >
+                    ⚡
+                  </button>
+                </div>
+                <div class="skill-item">
+                  <strong>Skill 2</strong>
+                  <span class="skill-cooldown"
+                    >[<span id="cooldown2">0</span>]</span
+                  >
+                  <select
+                    class="form-select form-select-sm"
+                    id="cooldownDropdown2"
+                    onchange="setCooldown(2)"
+                  >
+                    <option value="0">Sem Cooldown</option>
+                    <option value="1">1 Turno</option>
+                    <option value="2">2 Turnos</option>
+                    <option value="3">3 Turnos</option>
+                    <option value="4">4 Turnos</option>
+                    <option value="5">5 Turnos</option>
+                    <option value="6">6 Turnos</option>
+                  </select>
+                  <button
+                    class="btn btn-primary skill-button"
+                    onclick="useSkill(2)"
+                    data-bs-toggle="tooltip"
+                    title="Usar Habilidade"
+                  >
+                    ⚡
+                  </button>
+                </div>
+                <div class="skill-item">
+                  <strong>Skill 3</strong>
+                  <span class="skill-cooldown"
+                    >[<span id="cooldown3">0</span>]</span
+                  >
+                  <select
+                    class="form-select form-select-sm"
+                    id="cooldownDropdown3"
+                    onchange="setCooldown(3)"
+                  >
+                    <option value="0">Sem Cooldown</option>
+                    <option value="1">1 Turno</option>
+                    <option value="2">2 Turnos</option>
+                    <option value="3">3 Turnos</option>
+                    <option value="4">4 Turnos</option>
+                    <option value="5">5 Turnos</option>
+                    <option value="6">6 Turnos</option>
+                  </select>
+                  <button
+                    class="btn btn-primary skill-button"
+                    onclick="useSkill(3)"
+                    data-bs-toggle="tooltip"
+                    title="Usar Habilidade"
+                  >
+                    ⚡
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="stat-box">
+              <h3>
+                <i class="fas fa-exclamation-triangle icon"></i> Condições
+              </h3>
+              <div class="mb-3">
+                <label>Adicionar Condição:</label>
+                <select id="conditionSelect" class="form-control">
+                  <option value="Agilidade">🏃‍♂️ Agilidade</option>
+                  <option value="Atordoado">😵 Atordoado</option>
+                  <option value="Benção Divina">✨ Benção Divina</option>
+                  <option value="Cegueira">🕶️ Cegueira</option>
+                  <option value="Desarmado">🚫 Desarmado</option>
+                  <option value="Destreza">⚡ Destreza</option>
+                  <option value="Escudo">🛡️ Escudo</option>
+                  <option value="Exaustão">😴 Exaustão</option>
+                  <option value="Hiperfoco">🎯 Hiperfoco</option>
+                  <option value="Imobilizado">🔒 Imobilizado</option>
+                  <option value="Lentidão">🐢 Lentidão</option>
+                  <option value="Maldição">💀 Maldição</option>
+                  <option value="Mente Afiada">🧠 Mente Afiada</option>
+                  <option value="Queimadura">🔥 Queimadura</option>
+                  <option value="Regeneração">🩹 Regeneração</option>
+                  <option value="Sangramento">🩸 Sangramento</option>
+                  <option value="Silêncio">🔇 Silêncio</option>
+                  <option value="Sorte do Guerreiro">
+                    🍀 Sorte do Guerreiro
+                  </option>
+                  <option value="Superforça">💪 Superforça</option>
+                  <option value="Vigor">🌟 Vigor</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label>Duração (turnos):</label>
+                <input
+                  type="number"
+                  id="conditionDuration"
+                  class="form-control"
+                  min="1"
+                  value="1"
+                />
+              </div>
+              <button class="btn btn-primary w-100" onclick="addCondition()">
+                Adicionar Condição
+              </button>
+              <div id="conditionsList" class="mt-3 scrollable"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chat Log -->
+        <div class="chat-log-column stat-box mt-4">
+          <h3><i class="fas fa-comment-dots icon"></i> Chat Log</h3>
+          <div
+            id="eventLog"
+            class="bg-light p-2 border rounded scrollable"
+          ></div>
+        </div>
+
+        <!-- Botões de Turno -->
+        <div class="text-center mt-4">
+          <button class="btn btn-success btn-lg" onclick="startTurn()">
+            Iniciar Turno
+          </button>
+          <button class="btn btn-warning btn-lg" onclick="endTurn()">
+            Finalizar Turno
+          </button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

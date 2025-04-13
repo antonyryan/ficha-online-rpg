@@ -1,0 +1,267 @@
+/* Estilos Globais */
+body {
+  font-family: "Arial", sans-serif;
+  background-color: #f8f9fa;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+h2,
+h3 {
+  color: #2c3e50;
+}
+
+button {
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  transform: scale(1.05);
+}
+
+/* Seção de Configuração Inicial */
+.setup-section {
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.setup-section label {
+  font-weight: bold;
+  color: #555;
+}
+
+.setup-section .btn-primary {
+  background-color: #3498db;
+  border: none;
+}
+
+.setup-section .btn-primary:hover {
+  background-color: #2980b9;
+}
+
+/* Ficha do Personagem */
+#characterSheet {
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.stat-box {
+  background: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.stat-box h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+}
+
+.stat-box .icon {
+  color: #3498db;
+}
+
+/* Recursos (HP/SP) */
+.resource-box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.resource-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.resource-item .icon {
+  color: #e74c3c;
+  font-size: 1.2rem;
+}
+
+.resource-item button {
+  margin-left: 10px;
+}
+
+/* Atributos Grid */
+.attributes-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+
+.attribute-box {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 15px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.attribute-box .icon {
+  font-size: 1.5rem;
+  color: #2ecc71;
+}
+
+.attribute-value {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Habilidades */
+.skill-card {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.skill-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.skill-item strong {
+  font-size: 1rem;
+  color: #333;
+}
+
+.skill-cooldown {
+  font-size: 0.9rem;
+  color: #777;
+}
+
+.skill-button {
+  background-color: #2ecc71;
+  border: none;
+}
+
+.skill-button:hover {
+  background-color: #27ae60;
+}
+
+/* Condições */
+#conditionsList {
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px;
+  background: #fff;
+}
+
+.condition-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 5px;
+}
+
+.condition-box.buff {
+  border-left: 5px solid #2ecc71;
+}
+
+.condition-box.debuff {
+  border-left: 5px solid #e74c3c;
+}
+
+.condition-box i {
+  cursor: pointer;
+}
+
+/* Chat Log */
+.chat-log-column {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+}
+
+#eventLog {
+  max-height: 200px;
+  overflow-y: auto;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+/* Botões de Turno */
+.text-center .btn {
+  margin: 0 10px;
+  padding: 10px 20px;
+  font-size: 1rem;
+}
+
+.text-center .btn-success {
+  background-color: #3498db;
+  border: none;
+}
+
+.text-center .btn-success:hover {
+  background-color: #2980b9;
+}
+
+.text-center .btn-warning {
+  background-color: #f39c12;
+  border: none;
+}
+
+.text-center .btn-warning:hover {
+  background-color: #d35400;
+}
+
+  /* Estilo para a lista de jogadores */
+#playerList {
+  display: flex; /* Alinha os itens lateralmente */
+  gap: 10px; /* Espaçamento entre os itens */
+  padding: 0;
+  list-style: none;
+}
+
+/* Estilo para cada jogador */
+#playerList li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px;
+  width: 120px;
+  text-align: center;
+  background-color: #f9f9f9;
+}
